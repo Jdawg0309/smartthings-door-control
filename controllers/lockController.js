@@ -3,15 +3,16 @@ const { baseURL, authToken } = require('../config/smartthingsConfig');
 
 // Set a lock code
 exports.setCode = async (req, res) => {
-  const { deviceId } = req.params;
-  const { slot, code, label } = req.body;
+  const { deviceId } = req.params; // Extract deviceId from params
+  const { slot, code, label } = req.body; // Extract body parameters
 
-  // Validate inputs
   if (!deviceId || !slot || !code || !label) {
     return res.status(400).json({ error: "deviceId, slot, code, and label are required." });
   }
 
-  const url = `${SMARTTHINGS_BASE_URL}/devices/${deviceId}/commands`;
+  console.log(`[DEBUG] Received deviceId: ${deviceId}`); // Log the deviceId
+
+  const url = `${baseURL}${deviceId}/commands`;
   const payload = {
     commands: [
       {
@@ -23,10 +24,13 @@ exports.setCode = async (req, res) => {
     ],
   };
 
+  console.log(`[DEBUG] Sending request to: ${url}`);
+  console.log(`[DEBUG] Payload:`, JSON.stringify(payload, null, 2));
+
   try {
     const response = await axios.post(url, payload, {
       headers: {
-        Authorization: `Bearer ${SMARTTHINGS_TOKEN}`,
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       },
     });
@@ -36,13 +40,14 @@ exports.setCode = async (req, res) => {
       data: response.data,
     });
   } catch (error) {
-    console.error("Error setting lock code:", error.response?.data || error.message);
+    console.error(`[ERROR] Failed to set lock code:`, error.response?.data || error.message);
     res.status(500).json({
       error: "Failed to set lock code.",
       details: error.response?.data || error.message,
     });
   }
 };
+
 
 
 // Lock or unlock a door
