@@ -1,18 +1,19 @@
 
 # SmartThings Door Control API
 
-This project is a Node.js and Express-based API that integrates with the SmartThings API to manage connected door locks. It allows users to:
-- **Set lock codes**
-- **Lock and unlock doors**
-- **Log and debug requests**
+This project is a Node.js and Express-based API that integrates with the SmartThings API to manage connected door locks. It provides the ability to:
+- **Set lock codes** via URL parameters.
+- **Lock and unlock doors** using URL parameters.
+- **Log and debug requests** for troubleshooting.
 
 ---
 
 ## Features
 
-- **Set Lock Codes**: Assign custom lock codes to specific slots on SmartThings-compatible locks.
+- **Set Lock Codes**: Easily assign custom lock codes to specific slots on SmartThings-compatible locks.
 - **Lock/Unlock Doors**: Remotely control the state of your locks.
-- **Error Handling**: Includes robust error handling for malformed requests and invalid device IDs.
+- **URL-Based Control**: Supports operations via URL, making it accessible directly from a browser.
+- **Error Handling**: Includes robust error handling for invalid requests or parameters.
 - **Debugging Logs**: Logs API requests and payloads for easier debugging.
 
 ---
@@ -20,17 +21,17 @@ This project is a Node.js and Express-based API that integrates with the SmartTh
 ## Project Structure
 
 ```
-SmartThings Door Control API/
+smartthings-door-control/
 ├── controllers/
 │   └── lockController.js   # Handles lock-related actions
 ├── routes/
-│   └── lockRoutes.js       # Defines routes for API endpoints
+│   └── lockRoutes.js       # Defines API routes
 ├── config/
 │   └── smartthingsConfig.js # Configuration for SmartThings API
 ├── .env                    # Environment variables (e.g., API token)
 ├── server.js               # Main server file
 ├── package.json            # Project metadata and dependencies
-└── README.md               # Project documentation
+└── README.md               # Documentation
 ```
 
 ---
@@ -72,28 +73,30 @@ SmartThings Door Control API/
 ## API Endpoints
 
 ### 1. **Set Lock Code**
-- **URL**: `POST /api/locks/:deviceId/set-code`
+- **URL**: `GET /api/locks/:deviceId/set-code/:slot/:code/:label`
 - **Description**: Sets a lock code for the specified device.
-- **Request Body**:
-  ```json
-  {
-    "slot": 1,
-    "code": "1234",
-    "label": "Test Code"
-  }
+- **URL Parameters**:
+  - `deviceId` (string): The SmartThings device ID.
+  - `slot` (integer): The slot number for the lock code.
+  - `code` (string): The lock code.
+  - `label` (string): A label for the lock code.
+- **Example**:
+  ```plaintext
+  http://localhost:5000/api/locks/bee383a7-49c4-4698-83f6-b6674d5bbd56/set-code/1/1234/TestCode
   ```
 - **Response**:
   - Success: `200 OK`
   - Error: `400 Bad Request` or `500 Internal Server Error`
 
 ### 2. **Lock/Unlock Door**
-- **URL**: `POST /api/locks/:deviceId/lock-unlock`
+- **URL**: `GET /api/locks/:deviceId/lock-unlock/:action`
 - **Description**: Locks or unlocks the specified device.
-- **Request Body**:
-  ```json
-  {
-    "action": "lock"
-  }
+- **URL Parameters**:
+  - `deviceId` (string): The SmartThings device ID.
+  - `action` (string): The desired action (`lock` or `unlock`).
+- **Example**:
+  ```plaintext
+  http://localhost:5000/api/locks/bee383a7-49c4-4698-83f6-b6674d5bbd56/lock-unlock/lock
   ```
 - **Response**:
   - Success: `200 OK`
@@ -110,7 +113,7 @@ SmartThings Door Control API/
 
 ## Development Workflow
 
-1. **Make changes** to the project files.
+1. Make changes to the project files.
 2. Stage and commit your changes:
    ```bash
    git add .
@@ -133,7 +136,16 @@ SmartThings Door Control API/
 3. Commit and push your changes.
 4. Submit a pull request.
 
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
 
 ## Author
 
 Created by **Junaet Mahbub** (GitHub: [Jdawg0309](https://github.com/Jdawg0309)).
+
+---
