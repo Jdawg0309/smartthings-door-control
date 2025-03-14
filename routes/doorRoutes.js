@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const doorController = require('../controllers/doorController'); // Ensure the correct path
+const doorController = require("../controllers/doorController");
 
 // Route to get all doors
-router.get('/', doorController.getAllDoors);
+router.get("/", doorController.getAllDoors);
 
 module.exports = router;
